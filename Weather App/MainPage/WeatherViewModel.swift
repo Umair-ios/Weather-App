@@ -1,0 +1,97 @@
+//
+//  WeatherViewModel.swift
+//  Weather App
+//
+//  Created by Umair on 21.01.25.
+//
+
+import Foundation
+import Combine
+
+@Observable
+class WeatherViewModel {
+    
+    private var timer: AnyCancellable?
+    private var locationIndex: Int
+    private let networkManager: NetworkService
+    private let locations: [Coordinate]
+    
+    var currentLocation: Coordinate
+    var weathers: [Weather]
+    
+    var currentWeather: Weather? {
+        return weathers.isEmpty ? nil : weathers[locationIndex]
+    }
+    
+    init(
+        networkManager: NetworkService = NetworkManager(),
+        locations: [Coordinate] = Constants.Locations.coordinates,
+        locationIndex: Int = 1,
+        currentLocation: Coordinate = Coordinate(
+            latitude: 53.619653,
+            longitude: 10.079969
+        ),
+        weathers: [Weather] = []
+    ) {
+        self.networkManager = networkManager
+        self.locations = locations
+        self.locationIndex = locationIndex
+        self.currentLocation = currentLocation
+        self.weathers = weathers
+        startLocationUpdateTimer()
+    }
+    
+    func getHourlyForecastData() -> [HourlyWeather] {
+        guard let weather = currentWeather?.hourly else {
+            return []
+        }
+        
+        return (0..<min(weather.time.count, 12)).map { index in
+            HourlyWeather(
+                time: weather.time[index],
+                temperature: weather.temperature2M[index],
+                icon: weather.weatherCode[index].icon
+            )
+        }
+    }
+    
+    func getDailyForecastData() -> [DailyWeather] {
+        guard let weather = currentWeather?.daily else {
+            return []
+        }
+        
+        return (
+            0..<min(
+                weather.time.count,
+                weather.weatherCode.count,
+                weather.temperature2MMax.count,
+                weather.temperature2MMin.count
+            )
+        ).map { index in
+            DailyWeather(
+                time: weather.time[index],
+                icon: weather.weatherCode[index].icon,
+                temperatureMax: weather.temperature2MMax[index],
+                temperatureMin: weather.temperature2MMin[index]
+            )
+        }
+    }
+    
+    func fetchWeatherForecastData() async throws {
+        weathers = try await networkManager.fetchWeather(for: locations)
+    }
+    
+    private func startLocationUpdateTimer() {
+        timer = Timer.publish(
+            every: 10,
+            on: .main,
+            in: .common
+        )
+        .autoconnect()
+        .sink { [weak self] _ in
+            guard let self = self else { return }
+            self.currentLocation = self.locations[self.locationIndex]
+            self.locationIndex = (self.locationIndex + 1) % self.locations.count
+        }
+    }
+}
