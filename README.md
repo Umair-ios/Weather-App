@@ -2,6 +2,9 @@
 
 This file provides an overview of the work completed for the task and outlines potential enhancements that could be implemented with additional time.
 
+<img src="https://github.com/user-attachments/assets/bc78aea4-e831-4998-8c78-d42438bae219" width="300" />
+<img src="https://github.com/user-attachments/assets/a97f90a5-dc36-490b-826c-b63b677bde1e" width="300" />
+
 ## Completed Work
 
 ### 1. Feature Implementation
