@@ -89,3 +89,8 @@ struct WeatherDetailSection: View {
         }
     }
 }
+
+#Preview {
+    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
+    WeatherDetailsView(current: viewModel.currentWeather!.current)
+}

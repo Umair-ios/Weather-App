@@ -31,3 +31,18 @@ extension Weather: Equatable {
         lhs.daily == rhs.daily
     }
 }
+
+#if DEBUG
+extension Weather {
+    static var mock: [Weather] {
+        return Array(repeating: Weather(
+            latitude: 37.7749,   
+            longitude: -122.4194,
+            current: .mock,
+            hourly: .mock,
+            daily: .mock
+        ), count: 10)
+    }
+}
+
+#endif

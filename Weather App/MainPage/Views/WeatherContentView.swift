@@ -34,3 +34,8 @@ struct WeatherContentView: View {
         .padding()
     }
 }
+
+#Preview {
+    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
+    WeatherContentView(viewModel: viewModel)
+}

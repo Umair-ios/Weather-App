@@ -50,3 +50,8 @@ struct DailyForecastView: View {
         .forecastCardStyle()
     }
 }
+
+#Preview {
+    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
+    DailyForecastView(dailyWeather: viewModel.getDailyForecastData())
+}

@@ -37,6 +37,13 @@ enum WeatherCode: Int, Decodable {
     case thunderstormSlight = 95
     case thunderstormWithHailSlight = 96
     case thunderstormWithHailHeavy = 99
+    case unknown = -1  // Fallback case
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        let rawValue = try container.decode(Int.self)
+        self = WeatherCode(rawValue: rawValue) ?? .unknown
+    }
 }
 
 // MARK: description
@@ -58,6 +65,8 @@ extension WeatherCode {
         case .snowShowersSlight, .snowShowersHeavy: return "Snow showers"
         case .thunderstormSlight: return "Thunderstorm"
         case .thunderstormWithHailSlight, .thunderstormWithHailHeavy: return "Thunderstorm with hail"
+        case .unknown:
+            return "unknown weather"
         }
     }
 }
@@ -81,6 +90,8 @@ extension WeatherCode {
         case .snowShowersSlight, .snowShowersHeavy: return "cloud.snow.fill"
         case .thunderstormSlight: return "cloud.bolt.fill"
         case .thunderstormWithHailSlight, .thunderstormWithHailHeavy: return "cloud.bolt.rain.fill"
+        case .unknown:
+            return "unknown weather"
         }
     }
 }

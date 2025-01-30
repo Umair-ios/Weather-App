@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct HeadlineView: View {
+    
     let weather: Weather
     let coordinate: Coordinate
     
@@ -103,4 +104,9 @@ struct TemperatureDisplay: View {
             .font(.headline)
         }
     }
+}
+
+#Preview {
+    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
+    HeadlineView(weather: viewModel.currentWeather!, coordinate: viewModel.currentLocation)
 }

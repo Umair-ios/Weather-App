@@ -25,3 +25,16 @@ struct DailyWeather: Identifiable {
     let temperatureMax: Double
     let temperatureMin: Double
 }
+
+#if DEBUG
+extension Daily {
+    static var mock: Daily {
+        return Daily(
+            time: Array(repeating: Date(), count: 7),
+            weatherCode: Array(repeating: .clearSky, count: 7),
+            temperature2MMax: Array(repeating: 15.0, count: 7),
+            temperature2MMin: Array(repeating: 25.0, count: 7)
+        )
+    }
+}
+#endif

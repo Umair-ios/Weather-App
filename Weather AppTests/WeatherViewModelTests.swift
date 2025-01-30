@@ -90,6 +90,7 @@ final class WeatherViewModelTests: XCTestCase {
         let initialLocation = sut.currentLocation
         
         // When
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 11) {
             // Then
             XCTAssertNotEqual(self.sut.currentLocation.latitude, initialLocation.latitude)

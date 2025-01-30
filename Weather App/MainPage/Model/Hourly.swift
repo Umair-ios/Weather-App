@@ -23,3 +23,16 @@ struct HourlyWeather: Identifiable {
     let temperature: Double
     let icon: String
 }
+
+#if DEBUG
+extension Hourly {
+    static var mock: Hourly {
+        return Hourly(
+            time: Array(repeating: Date(), count: 24),
+            temperature2M: Array(repeating: 22.5, count: 24),
+            weatherCode: Array(repeating: .clearSky, count: 24)
+        )
+    }
+}
+
+#endif

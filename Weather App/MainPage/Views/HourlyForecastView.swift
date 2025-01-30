@@ -42,3 +42,8 @@ struct HourlyForecastView: View {
         .forecastCardStyle()
     }
 }
+
+#Preview {
+    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
+    HourlyForecastView(hourlyWeather: viewModel.getHourlyForecastData())
+}

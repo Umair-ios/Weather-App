@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     
-    private var viewModel = WeatherViewModel()
+    var viewModel: WeatherViewModel
     
     @State private var errorMessage: String = ""
     @State private var showAlert = false
@@ -44,5 +44,6 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
+    ContentView(viewModel: viewModel)
 }
