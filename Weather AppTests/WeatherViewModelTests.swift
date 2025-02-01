@@ -15,7 +15,7 @@ final class WeatherViewModelTests: XCTestCase {
     override func setUp() {
         super.setUp()
         mockNetworkService = MockNetworkService()
-        sut = WeatherViewModel(networkManager: mockNetworkService)
+        sut = WeatherViewModel(networkManager: mockNetworkService, timerInterval: 1)
     }
     
     override func tearDown() {
@@ -34,8 +34,24 @@ final class WeatherViewModelTests: XCTestCase {
     }
     
     func testInitialLocationIsFirstInList() {
-        XCTAssertEqual(sut.currentLocation.latitude, Constants.Locations.coordinates[0].latitude)
-        XCTAssertEqual(sut.currentLocation.longitude, Constants.Locations.coordinates[0].longitude)
+        XCTAssertEqual(
+            sut.currentLocation.latitude,
+            Constants.Locations.coordinates[0].latitude
+        )
+        XCTAssertEqual(
+            sut.currentLocation.longitude,
+            Constants.Locations.coordinates[0].longitude
+        )
+    }
+    
+    func testGetHourlyAndDailyDataEmptyWeather() {
+        // Given
+        let hourlyData = sut.getHourlyForecastData()
+        let dailyData = sut.getDailyForecastData()
+        
+        // Then
+        XCTAssertTrue(hourlyData.isEmpty)
+        XCTAssertTrue(dailyData.isEmpty)
     }
     
     // MARK: - Data Fetching Tests
@@ -43,7 +59,7 @@ final class WeatherViewModelTests: XCTestCase {
     func testFetchWeatherDataSuccess() async throws {
         // Given
         let mockWeather = mockNetworkService.createMockWeather()
-        mockNetworkService.mockWeathers = [mockWeather]
+        mockNetworkService.stubbedResponse = [mockWeather]
         
         // When
         try await sut.fetchWeatherForecastData()
@@ -55,8 +71,11 @@ final class WeatherViewModelTests: XCTestCase {
     
     func testFetchWeatherDataMultipleLocations() async throws {
         // Given
-        let mockWeathers = [mockNetworkService.createMockWeather(), mockNetworkService.createMockWeather(latitude: 52.0, longitude: 13.0)]
-        mockNetworkService.mockWeathers = mockWeathers
+        let mockWeathers = [
+            mockNetworkService.createMockWeather(),
+            mockNetworkService.createMockWeather(latitude: 52.0, longitude: 13.0)
+        ]
+        mockNetworkService.stubbedResponse = mockWeathers
         
         // When
         try await sut.fetchWeatherForecastData()
@@ -66,91 +85,38 @@ final class WeatherViewModelTests: XCTestCase {
         XCTAssertEqual(sut.weathers[1].latitude, 52.0)
     }
     
-    func testGetHourlyDataEmptyWeather() {
+    func testGetHourlyAndDailyDataLoadedWeather() async throws {
+        // Given
+        let mockWeathers = [
+            mockNetworkService.createMockWeather(),
+            mockNetworkService.createMockWeather(latitude: 52.0, longitude: 13.0)
+        ]
+        mockNetworkService.stubbedResponse = mockWeathers
+        
         // When
-        let hourlyData = sut.getHourlyForecastData()
+        try await sut.fetchWeatherForecastData()
         
         // Then
-        XCTAssertTrue(hourlyData.isEmpty)
-    }
-    
-    func testGetDailyDataEmptyWeather() {
-        // When
-        let dailyData = sut.getDailyForecastData()
+        XCTAssertFalse(sut.getHourlyForecastData().isEmpty)
+        XCTAssertFalse(sut.getDailyForecastData().isEmpty)
         
-        // Then
-        XCTAssertTrue(dailyData.isEmpty)
     }
     
     // MARK: - Location Timer Tests
-    
+    @MainActor
     func testLocationTimerUpdatesLocation() async {
         // Given
-        let expectation = XCTestExpectation(description: "Location should update")
         let initialLocation = sut.currentLocation
+        let expectation = XCTestExpectation(description: "Location should update")
         
         // When
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 11) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             // Then
             XCTAssertNotEqual(self.sut.currentLocation.latitude, initialLocation.latitude)
             XCTAssertNotEqual(self.sut.currentLocation.longitude, initialLocation.longitude)
             expectation.fulfill()
         }
         
-        await fulfillment(of: [expectation], timeout: 12)
+        await fulfillment(of: [expectation], timeout: 2)
     }
 }
-
-// MARK: - Mock Classes
-
-class MockNetworkService: NetworkService {
-    var mockWeathers: [Weather] = []
-    var shouldFail = false
-    var mockError: Error?
-    
-    func fetchWeather(for coordinates: [Coordinate]) async throws -> [Weather] {
-        if shouldFail {
-            throw mockError ?? NetworkError.unknown
-        }
-        return mockWeathers
-    }
-}
-
-
-// MARK: - Helper Methods
-
-extension MockNetworkService {
-    
-    func createMockWeather(latitude: Double = 53.619653, longitude: Double = 10.079969) -> Weather {
-        return Weather(
-            latitude: latitude,
-            longitude: longitude,
-            current: Current(
-                time: Date(),
-                temperature2M: 20.0,
-                apparentTemperature: 19.0,
-                weatherCode: .clearSky,
-                windSpeed10M: 10.0,
-                windDirection10M: 180.0,
-                windGusts10M: 15.0,
-                precipitation: 0.0,
-                rain: 0.0,
-                showers: 0.0,
-                snowfall: 0.0
-            ),
-            hourly: Hourly(
-                time: Array(repeating: Date(), count: 24),
-                temperature2M: Array(repeating: 20.0, count: 24),
-                weatherCode: Array(repeating: WeatherCode.clearSky, count: 24)
-            ),
-            daily: Daily(
-                time: Array(repeating: Date(), count: 7),
-                weatherCode: Array(repeating: WeatherCode.clearSky, count: 7),
-                temperature2MMax: Array(repeating: 25.0, count: 7),
-                temperature2MMin: Array(repeating: 15.0, count: 7)
-            )
-        )
-    }
-}
-

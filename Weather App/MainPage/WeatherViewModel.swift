@@ -15,6 +15,7 @@ class WeatherViewModel {
     private var locationIndex: Int
     private let networkManager: NetworkService
     private let locations: [Coordinate]
+    private let timerInterval: Double
     
     var currentLocation: Coordinate
     var weathers: [Weather]
@@ -31,13 +32,15 @@ class WeatherViewModel {
             latitude: 53.619653,
             longitude: 10.079969
         ),
-        weathers: [Weather] = []
+        weathers: [Weather] = [],
+        timerInterval: Double = 10
     ) {
         self.networkManager = networkManager
         self.locations = locations
         self.locationIndex = locationIndex
         self.currentLocation = currentLocation
         self.weathers = weathers
+        self.timerInterval = timerInterval
         startLocationUpdateTimer()
     }
     
@@ -83,7 +86,7 @@ class WeatherViewModel {
     
     private func startLocationUpdateTimer() {
         timer = Timer.publish(
-            every: 10,
+            every: timerInterval,
             on: .main,
             in: .common
         )
