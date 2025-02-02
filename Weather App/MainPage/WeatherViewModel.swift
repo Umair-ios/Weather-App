@@ -81,7 +81,7 @@ class WeatherViewModel {
     }
     
     func fetchWeatherForecastData() async throws {
-        weathers = try await networkManager.fetchWeather(for: locations)
+        weathers = try await networkManager.requestData(for: .fetchWeather(coordinates: locations))
     }
     
     private func startLocationUpdateTimer() {

@@ -45,7 +45,7 @@ struct Constants {
 
     struct API {
         
-        static let baseURL = "https://api.open-meteo.com/v1/forecast"
+        static let baseURL = "api.open-meteo.com"
     }
     
     // MARK: - QueryItems

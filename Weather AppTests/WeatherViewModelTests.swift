@@ -103,6 +103,7 @@ final class WeatherViewModelTests: XCTestCase {
     }
     
     // MARK: - Location Timer Tests
+    
     @MainActor
     func testLocationTimerUpdatesLocation() async {
         // Given

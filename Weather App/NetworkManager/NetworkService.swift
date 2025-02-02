@@ -9,5 +9,5 @@ import Foundation
 
 protocol NetworkService {
     
-    func fetchWeather(for coordinates: [Coordinate]) async throws -> [Weather]
+    func requestData(for endPoint: EndPoint) async throws -> [Weather]
 }
