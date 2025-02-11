@@ -26,6 +26,7 @@ struct HourlyWeather: Identifiable {
 
 #if DEBUG
 extension Hourly {
+    
     static var mock: Hourly {
         return Hourly(
             time: Array(repeating: Date(), count: 24),
@@ -35,4 +36,18 @@ extension Hourly {
     }
 }
 
+extension HourlyWeather {
+    
+    static var mock: [HourlyWeather] {
+        return Array(
+            repeating:
+                HourlyWeather(
+                    time: Date(),
+                    temperature: 15.0,
+                    icon: WeatherCode.clearSky.icon
+                ),
+            count: 7
+        )
+    }
+}
 #endif

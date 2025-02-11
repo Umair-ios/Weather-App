@@ -8,12 +8,14 @@
 import Foundation
 
 enum EndPoint {
+    
     case fetchWeather(coordinates: [Coordinate])
 }
 
 // MARK: path
 
 extension EndPoint {
+    
     var path: String {
         switch self {
         case .fetchWeather:
@@ -26,6 +28,7 @@ extension EndPoint {
 // MARK: queryItems
 
 extension EndPoint {
+    
     var queryItems: [URLQueryItem] {
         switch self {
         case .fetchWeather(let coordinates):
@@ -63,7 +66,6 @@ extension EndPoint {
             ]
         }
     }
-    
 }
 
 // MARK: url

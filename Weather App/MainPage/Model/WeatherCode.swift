@@ -65,8 +65,7 @@ extension WeatherCode {
         case .snowShowersSlight, .snowShowersHeavy: return "Snow showers"
         case .thunderstormSlight: return "Thunderstorm"
         case .thunderstormWithHailSlight, .thunderstormWithHailHeavy: return "Thunderstorm with hail"
-        case .unknown:
-            return "unknown weather"
+        case .unknown: return "unknown weather"
         }
     }
 }
@@ -90,8 +89,7 @@ extension WeatherCode {
         case .snowShowersSlight, .snowShowersHeavy: return "cloud.snow.fill"
         case .thunderstormSlight: return "cloud.bolt.fill"
         case .thunderstormWithHailSlight, .thunderstormWithHailHeavy: return "cloud.bolt.rain.fill"
-        case .unknown:
-            return "unknown weather"
+        case .unknown: return "unknown weather"
         }
     }
 }

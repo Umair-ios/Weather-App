@@ -13,25 +13,27 @@ struct WeatherContentView: View {
     
     var body: some View {
         ScrollView {
-            if let weather = viewModel.currentWeather {
-                LazyVStack(spacing: 20) {
-                    HeadlineView(
-                        weather: weather,
-                        coordinate: viewModel.currentLocation
-                    )
-                    
-                    HourlyForecastView(hourlyWeather: viewModel.getHourlyForecastData())
-                    
-                    DailyForecastView(dailyWeather: viewModel.getDailyForecastData())
-                    
-                    WeatherDetailsView(current: weather.current)
-                }
-            } else {
-                LoadingView()
-            }
+            weatherView(viewModel: viewModel)
         }
         .scrollIndicators(.hidden)
         .padding()
+    }
+    
+    @ViewBuilder
+    private func weatherView(viewModel: WeatherViewModel) -> some View {
+        if let weather = viewModel.currentWeather {
+            LazyVStack(spacing: 20) {
+                HeadlineView(weather: weather, coordinate: viewModel.currentLocation)
+                
+                HourlyForecastView(hourlyWeather: viewModel.getHourlyForecastData())
+                
+                DailyForecastView(dailyWeather: viewModel.getDailyForecastData())
+                
+                WeatherDetailsView(current: weather.current)
+            }
+        } else {
+            LoadingView()
+        }
     }
 }
 

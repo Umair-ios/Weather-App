@@ -39,6 +39,7 @@ struct Constants {
         static let rain = "Rain: %.0f mm"
         static let shower = "Shower: %.0f mm"
         static let snowfall = "Snow: %.0f cm"
+        static let retry = "Retry"
     }
     
     // MARK: - API
@@ -86,6 +87,7 @@ struct Constants {
         
         static let cloudAndSnow = "cloud.snow.fill"
         static let wind = "wind"
+        static let error = "exclamationmark.triangle.fill"
     }
     
     // MARK: - Separator

@@ -11,8 +11,10 @@ import Combine
 @Observable
 class WeatherViewModel {
     
-    private var timer: AnyCancellable?
-    private var locationIndex: Int
+    private(set) var state: State = .loading
+    private(set) var timer: AnyCancellable?
+    private(set) var locationIndex: Int
+    
     private let networkManager: NetworkService
     private let locations: [Coordinate]
     private let timerInterval: Double
@@ -80,8 +82,15 @@ class WeatherViewModel {
         }
     }
     
-    func fetchWeatherForecastData() async throws {
-        weathers = try await networkManager.requestData(for: .fetchWeather(coordinates: locations))
+    func fetchWeatherForecastData() async {
+        do {
+            state = .loading
+            weathers = try await networkManager.requestData(for: .fetchWeather(coordinates: locations))
+            state = .success(weathers)
+
+        } catch (let error) {
+            state = .failure(error)
+        }
     }
     
     private func startLocationUpdateTimer() {
@@ -97,4 +106,11 @@ class WeatherViewModel {
             self.locationIndex = (self.locationIndex + 1) % self.locations.count
         }
     }
+}
+
+// MARK: State
+
+extension WeatherViewModel {
+    
+    typealias State = ContentViewState<[Weather]>
 }

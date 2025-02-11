@@ -28,6 +28,7 @@ struct DailyWeather: Identifiable {
 
 #if DEBUG
 extension Daily {
+    
     static var mock: Daily {
         return Daily(
             time: Array(repeating: Date(), count: 7),
@@ -35,6 +36,18 @@ extension Daily {
             temperature2MMax: Array(repeating: 15.0, count: 7),
             temperature2MMin: Array(repeating: 25.0, count: 7)
         )
+    }
+}
+
+extension DailyWeather {
+    
+    static var mock: [DailyWeather] {
+        return Array(repeating: DailyWeather(
+            time: Date(),
+            icon: WeatherCode.clearSky.icon,
+            temperatureMax: 15.0,
+            temperatureMin: 25.0
+        ), count: 7)
     }
 }
 #endif

@@ -37,7 +37,7 @@ struct LoadingView: View {
     }
 }
 
-// MARK: - ViewModifier for styling
+// MARK: - ForecastCardModifier
 
 struct ForecastCardModifier: ViewModifier {
     

@@ -16,50 +16,23 @@ struct WeatherDetailsView: View {
             Text(Constants.Texts.others)
                 .font(.title2)
             
-            HStack(spacing: 30) {
-                Group {
-                    WeatherDetailSection(
-                        title: Constants.Texts.wind,
-                        systemImage: Constants.SystemImages.wind,
-                        details: [
-                            String(
-                                format: Constants.Texts.windSpeed,
-                                current.windSpeed10M
-                            ),
-                            String(
-                                format: Constants.Texts.windDirection,
-                                current.windDirection10M
-                            ),
-                            String(
-                                format: Constants.Texts.windGusts,
-                                current.windGusts10M
-                            )
-                        ]
-                    )
-                    
-                    WeatherDetailSection(
-                        title: Constants.Texts.precipitation,
-                        systemImage: Constants.SystemImages.cloudAndSnow,
-                        details: [
-                            String(
-                                format: Constants.Texts.rain,
-                                current.rain
-                            ),
-                            String(
-                                format: Constants.Texts.shower,
-                                current.showers
-                            ),
-                            String(
-                                format: Constants.Texts.snowfall,
-                                current.snowfall
-                            )
-                        ]
-                    )
-                }
-                .forecastCardStyle()
+            HStack {
+                WeatherDetailSection(
+                    headerTitle: Constants.Texts.wind,
+                    headerImage: Constants.SystemImages.wind,
+                    details: Current.Detail.wind(current).desription
+                )
+                
+                Spacer()
+                                
+                WeatherDetailSection(
+                    headerTitle: Constants.Texts.precipitation,
+                    headerImage: Constants.SystemImages.cloudAndSnow,
+                    details: Current.Detail.precipitation(current).desription
+                )
             }
         }
-        .padding()
+        .forecastCardStyle()
     }
 }
 
@@ -67,8 +40,8 @@ struct WeatherDetailsView: View {
 
 struct WeatherDetailSection: View {
     
-    let title: String
-    let systemImage: String
+    let headerTitle: String
+    let headerImage: String
     let details: [String]
     
     var body: some View {
@@ -77,20 +50,21 @@ struct WeatherDetailSection: View {
             spacing: 10
         ) {
             Label(
-                title,
-                systemImage: systemImage
+                headerTitle,
+                systemImage: headerImage
             )
             .font(.headline)
+            
             ForEach(details, id: \.self) { detail in
                 Text(detail)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
             }
         }
+        .forecastCardStyle()
     }
 }
 
 #Preview {
-    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
-    WeatherDetailsView(current: viewModel.currentWeather!.current)
+    WeatherDetailsView(current: Current.mock)
 }

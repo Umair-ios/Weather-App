@@ -21,12 +21,12 @@ private extension NetworkManager {
     
     func fetchAndProcessData<T: Decodable>(from url: URL) async throws -> T {
         let (data, response) = try await URLSession.shared.data(from: url)
-        try handleResponseErrors(response)
+        try validateResponse(response)
         return try handleDecoding(from: data)
     }
 }
 
-// MARK: - handleDecoding
+// MARK: - Helper Methods
 
 private extension NetworkManager {
     
@@ -41,13 +41,8 @@ private extension NetworkManager {
             throw NetworkError.decodingError
         }
     }
-}
-
-// MARK: - handleErrors
-
-private extension NetworkManager {
     
-    func handleResponseErrors(_ response: URLResponse) throws {
+    func validateResponse(_ response: URLResponse) throws {
         guard let httpResponse = response as? HTTPURLResponse else {
             throw NetworkError.invalidResponse
         }
@@ -58,16 +53,5 @@ private extension NetworkManager {
         default:
             throw NetworkError.unknown
         }
-    }
-}
-
-// MARK: - decoder
-
-private extension JSONDecoder {
-    
-    var decoder: JSONDecoder {
-        self.keyDecodingStrategy = .convertFromSnakeCase
-        self.dateDecodingStrategy = .secondsSince1970
-        return self
     }
 }

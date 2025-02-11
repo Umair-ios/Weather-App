@@ -11,16 +11,18 @@ import XCTest
 // MARK: - Mock Classes
 
 class MockNetworkService: NetworkService {
+
     var stubbedResponse: [Weather] = []
     var shouldFail = false
     var mockError: Error?
     
-    func fetchWeather(for coordinates: [Coordinate]) async throws -> [Weather] {
+    func requestData(for endPoint: EndPoint) async throws -> [Weather] {
         if shouldFail {
             throw mockError ?? NetworkError.unknown
         }
         return stubbedResponse
     }
+    
 }
 
 

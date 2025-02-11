@@ -18,7 +18,7 @@ struct DailyForecastView: View {
             
             ScrollView {
                 ForEach(dailyWeather) { data in
-                    HStack(spacing: 40) {
+                    HStack(spacing: 36) {
                         Text(
                             data.time.formatted(
                                 date: .abbreviated,
@@ -41,6 +41,7 @@ struct DailyForecastView: View {
                             )
                         )
                     }
+                    .frame(maxWidth: .infinity)
                     .forecastCardStyle()
                 }
             }
@@ -52,6 +53,5 @@ struct DailyForecastView: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
-    DailyForecastView(dailyWeather: viewModel.getDailyForecastData())
+    DailyForecastView(dailyWeather: DailyWeather.mock)
 }

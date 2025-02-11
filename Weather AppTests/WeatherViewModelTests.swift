@@ -62,7 +62,7 @@ final class WeatherViewModelTests: XCTestCase {
         mockNetworkService.stubbedResponse = [mockWeather]
         
         // When
-        try await sut.fetchWeatherForecastData()
+        await sut.fetchWeatherForecastData()
         
         // Then
         XCTAssertFalse(sut.weathers.isEmpty)
@@ -78,7 +78,7 @@ final class WeatherViewModelTests: XCTestCase {
         mockNetworkService.stubbedResponse = mockWeathers
         
         // When
-        try await sut.fetchWeatherForecastData()
+        await sut.fetchWeatherForecastData()
         
         // Then
         XCTAssertEqual(sut.weathers.count, 2)
@@ -94,7 +94,7 @@ final class WeatherViewModelTests: XCTestCase {
         mockNetworkService.stubbedResponse = mockWeathers
         
         // When
-        try await sut.fetchWeatherForecastData()
+        await sut.fetchWeatherForecastData()
         
         // Then
         XCTAssertFalse(sut.getHourlyForecastData().isEmpty)

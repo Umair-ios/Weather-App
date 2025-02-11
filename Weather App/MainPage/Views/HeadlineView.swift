@@ -22,6 +22,9 @@ struct HeadlineView: View {
                 icon: weather.current.weatherCode.icon,
                 animate: $animate
             )
+            .onChange(of: coordinate) {
+                animate.toggle()
+            }
             
             TemperatureDisplay(
                 temperature: weather.current.temperature2M,
@@ -107,6 +110,8 @@ struct TemperatureDisplay: View {
 }
 
 #Preview {
-    @Previewable @State var viewModel = WeatherViewModel(weathers: Weather.mock)
-    HeadlineView(weather: viewModel.currentWeather!, coordinate: viewModel.currentLocation)
+    HeadlineView(
+        weather: Weather.mock.first!,
+        coordinate: Coordinate.mock
+    )
 }

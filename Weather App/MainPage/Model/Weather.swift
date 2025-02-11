@@ -34,6 +34,7 @@ extension Weather: Equatable {
 
 #if DEBUG
 extension Weather {
+    
     static var mock: [Weather] {
         return Array(repeating: Weather(
             latitude: 37.7749,   

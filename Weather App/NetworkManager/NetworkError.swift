@@ -20,15 +20,17 @@ enum NetworkError: LocalizedError {
 extension NetworkError {
     
     var errorMessage: String {
+        let errorType = Constants.Errors.self
+        
         switch self {
         case .invalidURL:
-            return Constants.Errors.invalidURL
+            return errorType.invalidURL
         case .invalidResponse:
-            return Constants.Errors.invalidResponse
+            return errorType.invalidResponse
         case .decodingError:
-            return Constants.Errors.decodingError
+            return errorType.decodingError
         case .unknown:
-            return Constants.Errors.unknown
+            return errorType.unknown
         }
     }
 }
